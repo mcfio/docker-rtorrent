@@ -17,7 +17,7 @@ WORKDIR /config
 RUN apk add --no-cache \
     rtorrent
 
-COPY config/ /config
+COPY defaults/ /defaults
 COPY docker-entrypoint.sh /usr/local/bin
 
 EXPOSE 49164 6881

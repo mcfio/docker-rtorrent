@@ -7,26 +7,18 @@
 #############################################################################
 
 # Instance layout (base paths)
-method.insert = cfg.basedir, private|const|string, (cat,"/config/")
 method.insert = cfg.datadir, private|const|string, (cat,"/data/")
 method.insert = cfg.watch,   private|const|string, (cat,(cfg.datadir),"watch/")
 method.insert = cfg.logs,    private|const|string, (cat,(cfg.basedir),"log/")
-method.insert = cfg.drop_in, private|const|string, (cat,(cfg.basedir),"config.d/")
 method.insert = cfg.logfile, private|const|string, (cat,(cfg.logs),"rtorrent-",(system.time),".log")
 
 # Create instance directories
 execute.throw = sh, -c, (cat,\
     "cd \"", (cfg.basedir), "\" ",\
-    "&& mkdir -p session log config.d")
+    "&& mkdir -p session log")
 execute.throw = sh, -c, (cat,\
     "cd \"", (cfg.datadir), "\" ",\
     "&& mkdir -p download watch/{load,start}")
-
-# Enable 'drop-in' config fragments
-execute.nothrow = sh, -c, (cat,\
-    "find ", (cfg.drop_in), " -name '*.rc' ",\
-    "| sort | sed -re 's/^/import=/' >", (cfg.drop_in), ".import")
-try_import = (cat, (cfg.drop_in), ".import")
 
 # Listening port for incoming peer traffic (fixed; you can also randomize it)
 network.port_range.set = 49264-49264
